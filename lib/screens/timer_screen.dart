@@ -7,11 +7,13 @@ import '../services/audio_service.dart';
 import '../widgets/sound_selector.dart';
 
 class TimerScreen extends StatefulWidget {
-  const TimerScreen({super.key});
+  final bool showCloseButton;
+  const TimerScreen({super.key, this.showCloseButton = true});
 
   @override
   State<TimerScreen> createState() => _TimerScreenState();
 }
+
 
 class _TimerScreenState extends State<TimerScreen>
     with TickerProviderStateMixin {
@@ -187,20 +189,22 @@ class _TimerScreenState extends State<TimerScreen>
                 ),
               ),
               // ── Close Button (Placed LAST to be on top) ──
-              Positioned(
-                top: 0,
-                right: 8,
-                child: IconButton(
-                  onPressed: () {
-                    _audioService.stopAll();
-                    Navigator.of(context).pop();
-                  },
-                  icon: const Icon(Icons.close_rounded),
-                  iconSize: 28,
-                  color: Colors.white70,
-                  tooltip: '홈으로 돌아가기',
+              if (widget.showCloseButton)
+                Positioned(
+                  top: 0,
+                  right: 8,
+                  child: IconButton(
+                    onPressed: () {
+                      _audioService.stopAll();
+                      Navigator.of(context).pop();
+                    },
+                    icon: const Icon(Icons.close_rounded),
+                    iconSize: 28,
+                    color: Colors.white70,
+                    tooltip: '홈으로 돌아가기',
+                  ),
                 ),
-              ),
+
             ],
           ),
         ),

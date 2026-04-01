@@ -19,9 +19,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> _screens = const [
     _HomeTab(),
+    TimerScreen(showCloseButton: false),
     BreathingScreen(),
     StatsScreen(),
   ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +56,11 @@ class _HomeScreenState extends State<HomeScreen> {
               label: '홈',
             ),
             NavigationDestination(
+              icon: Icon(Icons.spa_outlined, color: AppTheme.textSecondary),
+              selectedIcon: Icon(Icons.spa_rounded, color: AppTheme.primary),
+              label: '명상',
+            ),
+            NavigationDestination(
               icon: Icon(Icons.air_outlined, color: AppTheme.textSecondary),
               selectedIcon: Icon(Icons.air_rounded, color: AppTheme.primary),
               label: '호흡',
@@ -65,6 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
               label: '통계',
             ),
           ],
+
         ),
       ),
     );
@@ -213,11 +221,9 @@ class _HomeTabState extends State<_HomeTab> {
                 subtitle: '고요한 시간을 가져보세요',
                 gradient: AppTheme.accentGradient,
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => Scaffold(body: const TimerScreen()),
-                    ),
-                  );
+                  final homeState =
+                      context.findAncestorStateOfType<_HomeScreenState>();
+                  homeState?.setState(() => homeState._currentIndex = 1);
                 },
               ),
               const SizedBox(height: 12),
@@ -229,12 +235,12 @@ class _HomeTabState extends State<_HomeTab> {
                   colors: [Color(0xFF00BCD4), Color(0xFF00E5FF)],
                 ),
                 onTap: () {
-                  // Switch to breathing tab
                   final homeState =
                       context.findAncestorStateOfType<_HomeScreenState>();
-                  homeState?.setState(() => homeState._currentIndex = 1);
+                  homeState?.setState(() => homeState._currentIndex = 2);
                 },
               ),
+
               const Spacer(),
               // ── Motivational Quote ──
               Center(
