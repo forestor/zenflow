@@ -14,8 +14,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
-  int _totalMinutes = 0;
-  int _streak = 0;
 
   final List<Widget> _screens = const [
     _HomeTab(),
@@ -23,7 +21,6 @@ class _HomeScreenState extends State<HomeScreen> {
     BreathingScreen(),
     StatsScreen(),
   ];
-
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +69,6 @@ class _HomeScreenState extends State<HomeScreen> {
               label: '통계',
             ),
           ],
-
         ),
       ),
     );
@@ -133,138 +129,135 @@ class _HomeTabState extends State<_HomeTab> {
       child: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 16),
-              // ── Header ──
-              Text('ZenFlow',
-                  style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                        fontSize: 36,
-                        foreground: Paint()
-                          ..shader = AppTheme.accentGradient.createShader(
-                            const Rect.fromLTWH(0, 0, 200, 40),
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min, // 추가 제약
+              children: [
+                const SizedBox(height: 16),
+                // ── Header ──
+                Text('ZenFlow',
+                    style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                          fontSize: 36,
+                          foreground: Paint()
+                            ..shader = AppTheme.accentGradient.createShader(
+                              const Rect.fromLTWH(0, 0, 200, 40),
+                            ),
+                        )),
+                const SizedBox(height: 4),
+                Text(_getGreeting(),
+                    style: Theme.of(context).textTheme.bodyLarge),
+                const SizedBox(height: 32),
+                // ── Today's Summary ──
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    gradient: AppTheme.cardGradient,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.white.withAlpha(10)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('오늘의 명상',
+                          style: TextStyle(
+                              color: AppTheme.textSecondary, fontSize: 14)),
+                      const SizedBox(height: 8),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            '$_todayMinutes',
+                            style: const TextStyle(
+                              fontSize: 48,
+                              fontWeight: FontWeight.w700,
+                              color: AppTheme.textPrimary,
+                            ),
                           ),
-                      )),
-              const SizedBox(height: 4),
-              Text(_getGreeting(),
-                  style: Theme.of(context).textTheme.bodyLarge),
-              const SizedBox(height: 32),
-              // ── Today's Summary ──
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  gradient: AppTheme.cardGradient,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.white.withAlpha(10)),
+                          const Padding(
+                            padding: EdgeInsets.only(bottom: 8),
+                            child: Text(' 분',
+                                style: TextStyle(
+                                    fontSize: 18, color: AppTheme.textSecondary)),
+                          ),
+                          const SizedBox(width: 16),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: AppTheme.warning.withAlpha(30),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.local_fire_department_rounded,
+                                    color: AppTheme.warning, size: 16),
+                                const SizedBox(width: 4),
+                                Text('$_streak일 연속',
+                                    style: const TextStyle(
+                                        color: AppTheme.warning,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w600)),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('오늘의 명상',
-                        style: TextStyle(
-                            color: AppTheme.textSecondary, fontSize: 14)),
-                    const SizedBox(height: 8),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          '$_todayMinutes',
-                          style: const TextStyle(
-                            fontSize: 48,
-                            fontWeight: FontWeight.w700,
-                            color: AppTheme.textPrimary,
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(bottom: 8),
-                          child: Text(' 분',
-                              style: TextStyle(
-                                  fontSize: 18, color: AppTheme.textSecondary)),
-                        ),
-                        const SizedBox(width: 16),
-
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: AppTheme.warning.withAlpha(30),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(Icons.local_fire_department_rounded,
-                                  color: AppTheme.warning, size: 16),
-                              const SizedBox(width: 4),
-                              Text('$_streak일 연속',
-                                  style: const TextStyle(
-                                      color: AppTheme.warning,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600)),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                const SizedBox(height: 24),
+                // ── Quick Actions ──
+                Text('시작하기',
+                    style: Theme.of(context).textTheme.titleLarge),
+                const SizedBox(height: 16),
+                _QuickActionCard(
+                  icon: Icons.timer_outlined,
+                  title: '명상 타이머',
+                  subtitle: '고요한 시간을 가져보세요',
+                  gradient: AppTheme.accentGradient,
+                  onTap: () {
+                    final homeState =
+                        context.findAncestorStateOfType<_HomeScreenState>();
+                    homeState?.setState(() => homeState._currentIndex = 1);
+                  },
                 ),
-              ),
-              const SizedBox(height: 24),
-              // ── Quick Actions ──
-              Text('시작하기',
-                  style: Theme.of(context).textTheme.titleLarge),
-              const SizedBox(height: 16),
-              _QuickActionCard(
-                icon: Icons.timer_outlined,
-                title: '명상 타이머',
-                subtitle: '고요한 시간을 가져보세요',
-                gradient: AppTheme.accentGradient,
-                onTap: () {
-                  final homeState =
-                      context.findAncestorStateOfType<_HomeScreenState>();
-                  homeState?.setState(() => homeState._currentIndex = 1);
-                },
-              ),
-              const SizedBox(height: 12),
-              _QuickActionCard(
-                icon: Icons.air_rounded,
-                title: '호흡 가이드',
-                subtitle: '4-7-8 호흡법으로 마음을 가라앉히세요',
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF00BCD4), Color(0xFF00E5FF)],
+                const SizedBox(height: 12),
+                _QuickActionCard(
+                  icon: Icons.air_rounded,
+                  title: '호흡 가이드',
+                  subtitle: '4-7-8 호흡법으로 마음을 가라앉히세요',
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF00BCD4), Color(0xFF00E5FF)],
+                  ),
+                  onTap: () {
+                    final homeState =
+                        context.findAncestorStateOfType<_HomeScreenState>();
+                    homeState?.setState(() => homeState._currentIndex = 2);
+                  },
                 ),
-                onTap: () {
-                  final homeState =
-                      context.findAncestorStateOfType<_HomeScreenState>();
-                  homeState?.setState(() => homeState._currentIndex = 2);
-                },
-              ),
-
                 const SizedBox(height: 48),
                 // ── Motivational Quote ──
-
-              Center(
-                child: Text(
-                  '"호흡에 집중하면, 지금 이 순간으로 돌아올 수 있습니다."',
-                  style: TextStyle(
-                    color: AppTheme.textSecondary.withAlpha(150),
-                    fontStyle: FontStyle.italic,
-                    fontSize: 13,
+                Center(
+                  child: Text(
+                    '"호흡에 집중하면, 지금 이 순간으로 돌아올 수 있습니다."',
+                    style: TextStyle(
+                      color: AppTheme.textSecondary.withAlpha(150),
+                      fontStyle: FontStyle.italic,
+                      fontSize: 13,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
                 ),
-              ),
-              const SizedBox(height: 16),
-            ],
+                const SizedBox(height: 32),
+              ],
+            ),
           ),
         ),
       ),
     );
-
   }
 }
 
