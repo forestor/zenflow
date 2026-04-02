@@ -131,7 +131,9 @@ class _HomeTabState extends State<_HomeTab> {
     return Container(
       decoration: const BoxDecoration(gradient: AppTheme.backgroundGradient),
       child: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
+          child: Padding(
+
           padding: const EdgeInsets.all(24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -183,7 +185,8 @@ class _HomeTabState extends State<_HomeTab> {
                               style: TextStyle(
                                   fontSize: 18, color: AppTheme.textSecondary)),
                         ),
-                        const Spacer(),
+                        const SizedBox(width: 16),
+
                         Container(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 12, vertical: 6),
@@ -241,8 +244,9 @@ class _HomeTabState extends State<_HomeTab> {
                 },
               ),
 
-              const Spacer(),
-              // ── Motivational Quote ──
+                const SizedBox(height: 48),
+                // ── Motivational Quote ──
+
               Center(
                 child: Text(
                   '"호흡에 집중하면, 지금 이 순간으로 돌아올 수 있습니다."',
@@ -254,12 +258,13 @@ class _HomeTabState extends State<_HomeTab> {
                   textAlign: TextAlign.center,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 16),
             ],
           ),
         ),
       ),
     );
+
   }
 }
 

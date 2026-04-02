@@ -144,74 +144,76 @@ class _BreathingScreenState extends State<BreathingScreen>
     return Container(
       decoration: const BoxDecoration(gradient: AppTheme.backgroundGradient),
       child: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 24),
-            Text('호흡 가이드', style: Theme.of(context).textTheme.headlineMedium),
-            const SizedBox(height: 8),
-            Text('4-7-8 호흡법', style: Theme.of(context).textTheme.bodyMedium),
-            const Spacer(flex: 2),
-            // ── Breathing Circle ──
-            GestureDetector(
-              onTap: _toggle,
-              child: AnimatedBuilder(
-                animation: _controller,
-                builder: (context, _) {
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      AnimatedCircle(
-                        size: _circleSize,
-                        label: _currentPhase,
-                        color: _currentColor,
-                      ),
-                      const SizedBox(height: 24),
-                      if (_isRunning)
-                        Text(
-                          _phaseTimer,
-                          style: const TextStyle(
-                            fontSize: 36,
-                            fontWeight: FontWeight.w200,
-                            color: AppTheme.textSecondary,
-                          ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 24),
+              Text('호흡 가이드', style: Theme.of(context).textTheme.headlineMedium),
+              const SizedBox(height: 8),
+              Text('4-7-8 호흡법', style: Theme.of(context).textTheme.bodyMedium),
+              const SizedBox(height: 80), // Spacer flex 2 대체
+              // ── Breathing Circle ──
+              GestureDetector(
+                onTap: _toggle,
+                child: AnimatedBuilder(
+                  animation: _controller,
+                  builder: (context, _) {
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        AnimatedCircle(
+                          size: _circleSize,
+                          label: _currentPhase,
+                          color: _currentColor,
                         ),
-                    ],
-                  );
-                },
-              ),
-            ),
-            const Spacer(flex: 1),
-            // ── Cycle Counter ──
-            if (_isRunning)
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                decoration: BoxDecoration(
-                  color: Colors.white.withAlpha(10),
-                  borderRadius: BorderRadius.circular(20),
+                        const SizedBox(height: 24),
+                        if (_isRunning)
+                          Text(
+                            _phaseTimer,
+                            style: const TextStyle(
+                              fontSize: 36,
+                              fontWeight: FontWeight.w200,
+                              color: AppTheme.textSecondary,
+                            ),
+                          ),
+                      ],
+                    );
+                  },
                 ),
-                child: Text(
-                  '사이클: $_cycleCount',
-                  style: const TextStyle(
-                    color: AppTheme.textSecondary,
-                    fontSize: 16,
+              ),
+              const SizedBox(height: 48), // Spacer flex 1 대체
+              // ── Cycle Counter ──
+              if (_isRunning)
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withAlpha(10),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    '사이클: $_cycleCount',
+                    style: const TextStyle(
+                      color: AppTheme.textSecondary,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
-              ),
-            const SizedBox(height: 16),
-            // ── Guide Text ──
-            _buildGuideInfo(),
-            const SizedBox(height: 32),
-            // ── Stop Button ──
-            if (_isRunning)
-              TextButton.icon(
-                onPressed: _stop,
-                icon: const Icon(Icons.stop_rounded, color: AppTheme.warning),
-                label: const Text('종료',
-                    style: TextStyle(color: AppTheme.warning, fontSize: 16)),
-              ),
-            const SizedBox(height: 24),
-          ],
+              const SizedBox(height: 16),
+              // ── Guide Text ──
+              _buildGuideInfo(),
+              const SizedBox(height: 32),
+              // ── Stop Button ──
+              if (_isRunning)
+                TextButton.icon(
+                  onPressed: _stop,
+                  icon: const Icon(Icons.stop_rounded, color: AppTheme.warning),
+                  label: const Text('종료',
+                      style: TextStyle(color: AppTheme.warning, fontSize: 16)),
+                ),
+              const SizedBox(height: 48),
+            ],
+          ),
         ),
       ),
     );
