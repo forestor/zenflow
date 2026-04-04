@@ -323,7 +323,10 @@ class _TimerScreenState extends State<TimerScreen>
                 fontWeight: FontWeight.w500,
                 fontSize: 14,
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              // 선택된 칩은 텍스트가 잘리지 않도록 내부 여백을 충분히 확보
+              labelPadding: isSelected
+                  ? const EdgeInsets.symmetric(horizontal: 10, vertical: 2)
+                  : const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -333,6 +336,7 @@ class _TimerScreenState extends State<TimerScreen>
       ),
     );
   }
+
 
 
   Widget _buildControls() {
