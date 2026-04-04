@@ -82,7 +82,6 @@ class AudioService {
 
   // 🔔 3. Play End Signal (Bowl)
   Future<void> stopAndPlayEndSignal() async {
-    // 🔥 MUST reset sequence flags when explicitly ending
     _isWaitingForAmbient = false;
     _pendingAmbientId = null;
     
@@ -90,11 +89,17 @@ class AudioService {
       await _player.stop();
       await _player.setReleaseMode(ReleaseMode.release);
       await _player.setVolume(0.8);
+      // 안드로이드/모바일 브라우저에서 stop() 후 바로 play() 호출 시 설류가 발생할 수 있어
+      // 영상체 예를 주어 플레이어가 준비될 시간을 확보합니다
+      await Future.delayed(const Duration(milliseconds: 100));
       await _player.play(AssetSource(bowlSignalPath));
       _currentSound = 'end_signal';
-    } catch (_) {}
+    } catch (e) {
+      print('End Signal Error: $e');
+    }
     _isPlaying = false;
   }
+
 
   // 🔥 COMPLETELY stop and reset EVERYTHING
   Future<void> stopAll() async {
@@ -102,11 +107,12 @@ class AudioService {
     _pendingAmbientId = null;
     try {
       await _player.stop();
-      await _player.release(); // Free up resources more strictly
+      // release()는 안드로이드에서 플레이어 재사용을 방해해 제거합니다
     } catch (_) {}
     _isPlaying = false;
     _currentSound = null;
   }
+
 
   Future<void> setVolume(double volume) async {
     await _player.setVolume(volume.clamp(0.0, 1.0));

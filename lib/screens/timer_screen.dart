@@ -303,30 +303,37 @@ class _TimerScreenState extends State<TimerScreen>
   }
 
   Widget _buildDurationChips() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: _durations.map((m) {
-        final isSelected = m == _selectedMinutes;
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6),
-          child: ChoiceChip(
-            label: Text('$m분'),
-            selected: isSelected,
-            onSelected: (_) => _selectDuration(m),
-            selectedColor: AppTheme.primary,
-            backgroundColor: AppTheme.surfaceLight,
-            labelStyle: TextStyle(
-              color: isSelected ? Colors.white : AppTheme.textSecondary,
-              fontWeight: FontWeight.w500,
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: _durations.map((m) {
+          final isSelected = m == _selectedMinutes;
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6),
+            child: ChoiceChip(
+              label: Text('$m분'),
+              selected: isSelected,
+              onSelected: (_) => _selectDuration(m),
+              selectedColor: AppTheme.primary,
+              backgroundColor: AppTheme.surfaceLight,
+              labelStyle: TextStyle(
+                color: isSelected ? Colors.white : AppTheme.textSecondary,
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-        );
-      }).toList(),
+          );
+        }).toList(),
+      ),
     );
   }
+
 
   Widget _buildControls() {
     if (_isComplete) {
