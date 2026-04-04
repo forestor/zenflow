@@ -20,6 +20,14 @@ class _StatsScreenState extends State<StatsScreen> {
   void initState() {
     super.initState();
     _loadStats();
+    // StorageService에서 데이터가 저장될 때마다 자동으로 통계 화면을 갱신합니다.
+    StorageService.changeNotifier.addListener(_loadStats);
+  }
+
+  @override
+  void dispose() {
+    StorageService.changeNotifier.removeListener(_loadStats);
+    super.dispose();
   }
 
   Future<void> _loadStats() async {

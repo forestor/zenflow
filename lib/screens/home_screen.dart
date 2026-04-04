@@ -92,6 +92,14 @@ class _HomeTabState extends State<_HomeTab> {
   void initState() {
     super.initState();
     _loadData();
+    // StorageService에서 데이터가 저장될 때마다 자동으로 홈 화면을 갱신합니다.
+    StorageService.changeNotifier.addListener(_loadData);
+  }
+
+  @override
+  void dispose() {
+    StorageService.changeNotifier.removeListener(_loadData);
+    super.dispose();
   }
 
   Future<void> _loadData() async {

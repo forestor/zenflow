@@ -1,14 +1,21 @@
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/meditation_record.dart';
 
 class StorageService {
   static const String _recordsKey = 'meditation_records';
 
+  /// 데이터가 저장될 때마다 이 notifier의 값이 바뀝니다.
+  /// 홈/통계 화면은 이 신호를 받아 자동으로 데이터를 새로 불러옵니다.
+  static final ValueNotifier<int> changeNotifier = ValueNotifier(0);
+
   static Future<void> saveRecord(MeditationRecord record) async {
     final prefs = await SharedPreferences.getInstance();
     final records = await getRecords();
     records.add(record);
     await prefs.setString(_recordsKey, MeditationRecord.encodeList(records));
+    // 저장 완료 후 화면들에게 갱신 신호 발송
+    changeNotifier.value++;
   }
 
   static Future<List<MeditationRecord>> getRecords() async {
