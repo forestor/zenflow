@@ -1,4 +1,4 @@
-package com.example.zen_flow
+package com.forestor.zenflow
 
 import io.flutter.embedding.android.FlutterActivity
 
