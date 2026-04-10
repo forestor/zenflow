@@ -34,7 +34,7 @@ class _TimerScreenState extends State<TimerScreen>
     super.initState();
     _timerController = AnimationController(
       vsync: this,
-      duration: Duration(minutes: _selectedMinutes),
+      duration: Duration(seconds: _selectedMinutes * 60),
     )..addListener(_onTimerTick);
 
     _pulseController = AnimationController(
@@ -78,7 +78,7 @@ class _TimerScreenState extends State<TimerScreen>
       _isRunning = true;
       _isComplete = false;
     });
-    _timerController.duration = Duration(minutes: _selectedMinutes);
+    _timerController.duration = Duration(seconds: _selectedMinutes * 60);
     _timerController.forward(from: _timerController.value);
 
     // Start combined sequence: Signal (if used) -> Ambient (if selected)
@@ -133,10 +133,8 @@ class _TimerScreenState extends State<TimerScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: Container(
-        decoration: const BoxDecoration(gradient: AppTheme.backgroundGradient),
-        child: SafeArea(
-          child: Stack(
+      body: SafeArea(
+        child: Stack(
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -208,7 +206,6 @@ class _TimerScreenState extends State<TimerScreen>
             ],
           ),
         ),
-      ),
     );
   }
 
@@ -303,36 +300,57 @@ class _TimerScreenState extends State<TimerScreen>
   }
 
   Widget _buildDurationChips() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: _durations.map((m) {
-          final isSelected = m == _selectedMinutes;
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 6),
-            child: ChoiceChip(
-              label: Text('$m분'),
-              selected: isSelected,
-              onSelected: (_) => _selectDuration(m),
-              selectedColor: AppTheme.primary,
-              backgroundColor: AppTheme.surfaceLight,
-              labelStyle: TextStyle(
-                color: isSelected ? Colors.white : AppTheme.textSecondary,
-                fontWeight: FontWeight.w500,
-                fontSize: 14,
+    return SizedBox(
+      height: 48,
+      child: Center(
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          itemCount: _durations.length,
+          separatorBuilder: (context, index) => const SizedBox(width: 12),
+          itemBuilder: (context, index) {
+            final m = _durations[index];
+            final isSelected = m == _selectedMinutes;
+            return GestureDetector(
+              onTap: () => _selectDuration(m),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                padding: const EdgeInsets.symmetric(horizontal: 18),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  color: isSelected ? null : AppTheme.surfaceLight,
+                  gradient: isSelected ? AppTheme.accentGradient : null,
+                  boxShadow: isSelected
+                      ? [
+                          BoxShadow(
+                            color: AppTheme.primary.withAlpha(60),
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
+                          )
+                        ]
+                      : [],
+                  border: Border.all(
+                    color: isSelected
+                        ? Colors.white.withAlpha(40)
+                        : Colors.white.withAlpha(10),
+                    width: 1,
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    '$m분',
+                    style: TextStyle(
+                      color: isSelected ? Colors.white : AppTheme.textSecondary,
+                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
               ),
-              // 선택된 칩은 텍스트가 잘리지 않도록 내부 여백을 충분히 확보
-              labelPadding: isSelected
-                  ? const EdgeInsets.symmetric(horizontal: 10, vertical: 2)
-                  : const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          );
-        }).toList(),
+            );
+          },
+        ),
       ),
     );
   }

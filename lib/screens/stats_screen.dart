@@ -47,10 +47,8 @@ class _StatsScreenState extends State<StatsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(gradient: AppTheme.backgroundGradient),
-      child: SafeArea(
-        child: RefreshIndicator(
+    return SafeArea(
+      child: RefreshIndicator(
           onRefresh: _loadStats,
           child: ListView(
             padding: const EdgeInsets.all(24),
@@ -126,8 +124,7 @@ class _StatsScreenState extends State<StatsScreen> {
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 
   Widget _buildWeeklyChart() {

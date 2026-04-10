@@ -105,18 +105,21 @@ class _BreathingScreenState extends State<BreathingScreen>
     _controller.stop();
     _controller.reset();
     _totalCycles = _cycleCount;
-    final elapsed = _startTime != null
-        ? DateTime.now().difference(_startTime!).inMinutes
+    final elapsedSeconds = _startTime != null
+        ? DateTime.now().difference(_startTime!).inSeconds
         : 0;
+    
     setState(() {
       _isRunning = false;
       _cycleCount = 0;
     });
 
-    if (elapsed > 0 || _totalCycles > 0) {
+    if (elapsedSeconds > 1 || _totalCycles > 0) {
+      // Record at least 1 minute if some progress was made
+      final recordMinutes = (elapsedSeconds / 60).ceil().clamp(1, 999);
       await StorageService.saveRecord(MeditationRecord(
         date: DateTime.now(),
-        durationMinutes: elapsed > 0 ? elapsed : 1,
+        durationMinutes: recordMinutes,
         type: 'breathing',
       ));
       if (mounted) {
@@ -141,10 +144,8 @@ class _BreathingScreenState extends State<BreathingScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(gradient: AppTheme.backgroundGradient),
-      child: SafeArea(
-        child: SingleChildScrollView(
+    return SafeArea(
+      child: SingleChildScrollView(
           child: Column(
             children: [
               const SizedBox(height: 24),
@@ -215,8 +216,7 @@ class _BreathingScreenState extends State<BreathingScreen>
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 
   Widget _buildGuideInfo() {
